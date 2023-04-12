@@ -43,6 +43,8 @@ def parens_match_iterative(mylist):
     False
     """
     ### TODO
+    result = iterate(parens_update, 0, mylist)
+    return result==0
     pass
 
 
@@ -59,6 +61,12 @@ def parens_update(current_output, next_input):
       the updated value of `current_output`
     """
     ###TODO
+    if next_input == '(':
+        return current_output + 1
+    elif next_input == ')':
+        return current_output - 1
+    else:
+        return current_output
     pass
 
 
@@ -66,6 +74,7 @@ def test_parens_match_iterative():
     assert parens_match_iterative(['(', ')']) == True
     assert parens_match_iterative(['(']) == False
     assert parens_match_iterative([')']) == False
+    assert parens_match_iterative([ ')',')','(']) == False
 
 
 #### Scan solution
@@ -88,6 +97,8 @@ def parens_match_scan(mylist):
     
     """
     ###TODO
+    partial, total = scan(lambda x, y: x + y, 0, list(map(paren_map, mylist)))
+    return total == 0
     pass
 
 def scan(f, id_, a):
@@ -136,6 +147,9 @@ def test_parens_match_scan():
     assert parens_match_scan(['(', ')']) == True
     assert parens_match_scan(['(']) == False
     assert parens_match_scan([')']) == False
+    assert parens_match_scan(['(', ')',')']) == False
+    assert parens_match_scan(['(','(', ')',')']) == True
+    assert parens_match_scan(['(','(', ')',')',')']) == False 
 
 #### Divide and conquer solution
 
@@ -161,6 +175,20 @@ def parens_match_dc_helper(mylist):
       parens_match_dc to return the final True or False value
     """
     ###TODO
+    if len(mylist) == 1:
+        if mylist[0] == '(':
+            return (0, 1)
+        elif mylist[0] == ')':
+            return (1, 0)
+        else:
+            return (0, 0)
+    else:
+        m = len(mylist) // 2
+        left = parens_match_dc_helper(mylist[:m])
+        right = parens_match_dc_helper(mylist[m:])
+        r = left[0] + max(right[0] - left[1], 0)
+        l = right[1] + max(left[1] - right[0], 0)
+        return (r, l)
     pass
     
 
@@ -168,3 +196,6 @@ def test_parens_match_dc():
     assert parens_match_dc(['(', ')']) == True
     assert parens_match_dc(['(']) == False
     assert parens_match_dc([')']) == False
+    assert parens_match_dc(['(', ')',')']) == False
+    assert parens_match_dc(['(','(', ')',')']) == True
+    assert parens_match_dc(['(','(', ')',')',')']) == False 
