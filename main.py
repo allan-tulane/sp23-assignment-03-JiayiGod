@@ -62,11 +62,12 @@ def parens_update(current_output, next_input):
     """
     ###TODO
     if next_input == '(':
-        return current_output + 1
+        current_output+=1
     elif next_input == ')':
-        return current_output - 1
-    else:
-        return current_output
+        current_output-=1
+        if current_output<0:
+            current_output=-999999999
+    return current_output
     pass
 
 
@@ -98,7 +99,10 @@ def parens_match_scan(mylist):
     """
     ###TODO
     partial, total = scan(lambda x, y: x + y, 0, list(map(paren_map, mylist)))
-    return total == 0
+    if min(partial)<0:
+        return False
+    else:
+        return total == 0
     pass
 
 def scan(f, id_, a):
@@ -175,6 +179,8 @@ def parens_match_dc_helper(mylist):
       parens_match_dc to return the final True or False value
     """
     ###TODO
+    if len(mylist)==0:
+        return (0,0)
     if len(mylist) == 1:
         if mylist[0] == '(':
             return (0, 1)
