@@ -98,7 +98,8 @@ def parens_match_scan(mylist):
     
     """
     ###TODO
-    partial, total = scan(lambda x, y: x + y, 0, list(map(paren_map, mylist)))
+    paren_list=list(map(paren_map, mylist))
+    partial, total = scan(lambda x, y: x + y, 0, paren_list)
     if min(partial)<0:
         return False
     else:
